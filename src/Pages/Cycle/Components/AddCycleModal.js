@@ -85,7 +85,7 @@ const AddCycleModal = (props) => {
     setLoading(true);
     const dateStr = cycle.startedAt.startDate;
     const date = new Date(dateStr);
-    const now = addMinutes(new Date(), 5);
+    const now = addMinutes(date, 5);
     const formatted = set(now, {
       year: date.getFullYear(),
       month: date.getMonth(),
@@ -98,6 +98,7 @@ const AddCycleModal = (props) => {
         startedAt: isoString,
       });
       if (response.success) {
+        console.log(cycle.startedAt.startDate);
         props.closeModal();
         props.getCurrentCycle(response.data.message);
         props.reload();
@@ -105,6 +106,7 @@ const AddCycleModal = (props) => {
       }
     } catch (error) {
       ToastError({ text: error.data.ErrorMsg });
+      console.log(cycle.startedAt.startDate);
     }
     setLoading(false);
   };
@@ -154,7 +156,7 @@ const AddCycleModal = (props) => {
                       asSingle={true}
                       displayFormat={"DD/MM/YYYY"}
                       error={error.startedAt}
-                      minDate={subDays(new Date(), 1)}
+                      minDate={new Date()}
                     />
                   </div>
                 </div>

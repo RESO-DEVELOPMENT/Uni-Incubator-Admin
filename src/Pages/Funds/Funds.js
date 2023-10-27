@@ -206,8 +206,8 @@ const Funds = () => {
             </div>
           </div>
           <div className="col-span-2 grid grid-cols-2 gap-10">
-            <div className="bg-white shadow-md rounded-lg font-bold text-yellow-500 text-xl p-2">
-              <div className="border-4 border-yellow-500 rounded-lg p-3">
+            <div className="bg-white shadow-md rounded-lg font-bold text-yellow-500 text-xl p-2  w-fit">
+              <div className="border-4 border-yellow-500 rounded-lg p-3 ">
                 <div className="mb-3">
                   <GiTwoCoins />
                 </div>

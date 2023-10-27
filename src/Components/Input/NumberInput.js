@@ -1,5 +1,5 @@
 import { toNumber } from "lodash";
-import { MdAddCircleOutline } from "react-icons/md";
+import { MdAddCircleOutline, MdRemoveCircleOutline } from "react-icons/md";
 
 const NumberInput = (props) => {
   return (
@@ -15,7 +15,7 @@ const NumberInput = (props) => {
         onChange={props.onChange}
         className={`w-full border-none py-2 outline-none rounded-lg ${
           props.inputTextColor ? props.inputTextColor : "text-primary"
-        } ${props.increaseButton ? "pl-5 px-14" : "px-5"} `}
+        } ${props.increaseButton ? "pl-5 px-14" : "px-5"} ${props.decreaseButton ? "pl-20 px-14" : "px-5"}`}
         placeholder={props.placeholder}
       />
       {props.increaseButton && (
@@ -26,6 +26,14 @@ const NumberInput = (props) => {
           <MdAddCircleOutline />
         </div>
       )}
+      {/* {props.decreaseButton && (
+        <div
+          className="absolute flex items-center justify-center cursor-pointer right-15 top-0 rounded-r-lg h-full w-1/5 font-bold text-green bg-green/40"
+          onClick={props.decreaseStep}
+        >
+          <MdRemoveCircleOutline />
+        </div>
+      )} */}
       <div className="absolute text-primary text-xs font-bold top-0 -translate-y-1/2 left-4 px-2 bg-white">
         {props.label}
       </div>

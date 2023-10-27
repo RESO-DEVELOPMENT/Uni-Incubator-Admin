@@ -26,7 +26,7 @@ const CreateProject = () => {
   const [project, setProject] = useState({
     name: "",
     short: "",
-    budget: 0,
+    budget: 1000,
     manager: "",
     description: "",
     file: "",
@@ -44,6 +44,7 @@ const CreateProject = () => {
   const [error, setError] = useState({
     name: "",
     short: "",
+    budget: "",
     description: "",
     file: "",
   });
@@ -101,11 +102,21 @@ const CreateProject = () => {
 
   const getProjectData = (e) => {
     const { name, value } = e.target;
-    if ((name === "budget" && isNaN(+value)) || +value > 1000000000) {
-      return;
+    if ((name === "budget" && isNaN(+value)) || value > 30000) {
+      setError((prev) => {
+        return {
+          ...prev,
+          budget: "Quỹ dự kiến không được bằng 0 và không vượt ngưỡng 10.000.000 Points",
+        }
+      });
     }
     if (name === "short" && value.length > 7) {
-      return;
+      setError((prev) => {
+        return {
+          ...prev,
+          short: "Tên viết tắt của dự án không được vượt quá 7 ký tự",
+        };
+      })
     }
     setProject((prev) => {
       return {
@@ -131,13 +142,35 @@ const CreateProject = () => {
   };
 
   const increaseStep = () => {
-    if (project.budget >= 50000) {
-      return;
+    if (project.budget >= 10000000000) {
+      setError((prev) => {
+        return {
+          ...prev,
+          budget: "Quỹ dự kiến không được bằng 0 và không vượt ngưỡng 10.000.000 Points",
+        }
+      });
     }
     setProject((prev) => {
       return {
         ...prev,
         budget: toNumber(project.budget) + 1000,
+      };
+    });
+  };
+
+  const decreaseStep = () => {
+    if (project.budget <= 0) {
+      setError((prev) => {
+        return {
+          ...prev,
+          budget: "Quỹ dự kiến không được nhỏ hơn 0 và không vượt ngưỡng 10.000.000 Points",
+        }
+      });
+    }
+    setProject((prev) => {
+      return {
+        ...prev,
+        budget: toNumber(project.budget) - 1000,
       };
     });
   };
@@ -189,17 +222,17 @@ const CreateProject = () => {
           if (responseFile.success) {
             setProgress(100);
             navigate(`/projects/${projectId}`);
-            ToastSuccess({ text: "Tạo thành công" });
+            ToastSuccess({ text: "Thêm file dự án thành công!" });
           }
         } else {
           setProgress(100);
           setProgressText("Hoàn thành");
-          ToastSuccess({ text: "Tạo thành công" });
+          ToastSuccess({ text: "Khởi tạo dự án thành công!" });
           navigate(`/projects/${projectId}`);
         }
       }
     } catch (error) {
-      ToastError({ text: error.data.ErrorMsg });
+      ToastError({ text: "Thêm file dự án không thành công(" + error.data.ErrorMsg + ")" });
     }
     setLoading(false);
   };
@@ -209,7 +242,8 @@ const CreateProject = () => {
       setPmLoading(true);
       try {
         const response = await memberApi.get({
-          "page-size": 100,
+          "page-size": 64,
+          "page":1,
         });
         if (response.success) {
           const membersList = remove(
@@ -251,6 +285,7 @@ const CreateProject = () => {
         }
       } catch (error) {
         ToastError({ text: error.data.ErrorMsg });
+        console.log(error);
       }
       setPmLoading(false);
     };
@@ -267,9 +302,6 @@ const CreateProject = () => {
           <div className="flex justify-between items-center mb-10">
             <div className="flex gap-4 items-center font-bold ">
               <h1 className="text-3xl">Dự án mới</h1>
-              <div className="flex items-center justify-center h-5 w-5 rounded-md text-green bg-green/30">
-                <AiOutlineCheck />
-              </div>
             </div>
             <div className="relative flex items-center gap-3 text-sm font-bold cursor-pointer text-violet-700">
               <ImSpinner11 />
@@ -281,47 +313,31 @@ const CreateProject = () => {
             </div>
           </div>
 
-          <div className="mb-10">
-            <div className="mb-2 font-bold text-gray">Tên dự án</div>
-            <TextInputSimple
-              placeholder="Nhập tên dự án"
-              name="name"
-              value={project.name}
-              onChange={getProjectData}
-              error={error.name}
-            />
-          </div>
-          <div className="mb-10 flex gap-10">
-            <div className="w-1/2">
-              <div className="mb-2 font-bold text-gray">Tên viết tắt</div>
-              <TextInputSimple
-                placeholder="Ví dụ: UniCare"
-                name="short"
-                value={project.short}
-                onChange={getProjectData}
-                error={error.short}
-              />
-            </div>
-            <div className="flex w-1/2 gap-10">
-              <div className="w-full">
-                <div className="mb-2 font-bold text-gray">
-                  Quỹ dự kiến (Point)
-                </div>
-                <div>
-                  <NumberInput
-                    placeholder="Ví dụ: 2,000"
-                    name="budget"
-                    value={project.budget}
+            <div className="flex justify-between">
+              <div className="mb-10">
+                <div className="mb-2 font-bold text-gray">Tên dự án</div>
+                <TextInputSimple
+                  placeholder="Nhập tên của dự án."
+                  name="name"
+                  value={project.name}
+                  onChange={getProjectData}
+                  error={error.name}
+                />
+              </div>
+              <div className="mb-10">
+                <div className="w-fit">
+                  <div className="mb-2 font-bold text-gray">Tên viết tắt</div>
+                  <TextInputSimple
+                    placeholder="Ví dụ: VHGP"
+                    name="short"
+                    value={project.short}
                     onChange={getProjectData}
-                    increaseButton={true}
-                    increaseStep={increaseStep}
+                    error={error.short}
                   />
                 </div>
-              </div>
             </div>
-          </div>
-          <div className="mb-8 flex gap-10">
-            <div className="w-1/2">
+            <div className="flex w-1/2 gap-10">      
+              <div className="w-full">
               <div className="mb-2 font-bold text-gray">Quản lý dự án</div>
               {pmLoading ? (
                 <Loading />
@@ -330,7 +346,7 @@ const CreateProject = () => {
                   <div className="mb-2">
                     <SelectSimple
                       options={pmList}
-                      placeholder="Chọn quản lý dự án"
+                      placeholder="Chọn người quản lý dự án"
                       onChange={getManagerFromSelect}
                     />
                   </div>
@@ -373,16 +389,37 @@ const CreateProject = () => {
                           />
                         )}
                       </div>
-                      <span className="select-none">Gửi mail thông báo</span>
+                      <span className="select-none">Gửi email thông báo</span>
                     </div>
                   </div>
                 </>
               )}
             </div>
+            </div>
+            
+          </div>
+          <div className="mb-8 flex gap-10">
+            <div className="w-[47%]">
+                <div className="mb-2 font-bold text-gray">
+                  Quỹ dự kiến (Tính theo Point)
+                </div>
+                <div>
+                  <NumberInput
+                    name="budget"
+                    value={project.budget}
+                    onChange={getProjectData}
+                    increaseButton={true}
+                    increaseStep={increaseStep}
+                    decreseButton={true}
+                    decreaseStep={decreaseStep}
+                    error={error.budget}
+                  />
+                </div>
+              </div>
             <div className="w-1/2">
               <div className="mb-2 font-bold text-gray">Tài liệu đính kèm</div>
               <FileInput
-                placeholder="FinalProjectPitchDeck.pptx"
+                placeholder="Tài liệu của dự án (ưu tiên document)"
                 name="file"
                 value={project.file}
                 onChange={getFile}

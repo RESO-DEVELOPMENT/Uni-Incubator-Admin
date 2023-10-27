@@ -8,7 +8,7 @@ const Button = (props) => {
         props.type === "trans"
           ? `bg-transparent text-green`
           : `${
-              props.disabled ? "bg-green/70 text-white" : "bg-green text-white"
+              props.disabled ? "bg-[#2ecc71]/70 text-white" : "bg-[#2ecc71] text-white"
             } `
       }`}
       onClick={props.onClick}

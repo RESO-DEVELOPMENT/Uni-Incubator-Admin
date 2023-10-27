@@ -1,4 +1,5 @@
 import Datepicker from "react-tailwindcss-datepicker";
+import subDays from "date-fns/subDays";
 
 const DateInput = (props) => {
   return (
@@ -14,7 +15,7 @@ const DateInput = (props) => {
         inputClassName={`font-bold bg-white text-primary border ${
           props.error ? "border-red-500" : "border-slate-300"
         }  outline-none`}
-        minDate={props.minDate}
+        minDate={subDays(props.minDate, 1)}
         disabled={props.disabled}
       />
       <div className="absolute text-primary text-xs font-bold top-0 -translate-y-1/2 left-4 px-3 bg-white">
