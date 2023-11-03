@@ -17,8 +17,8 @@ const salaryApi = {
     const url = "salarycycle";
     return axiosClient.get(url, {
       params: {
-        page: 1,
-        "page-size": 1,
+        page: 2,
+        "page-size": 10,
         OrderBy: "dateDesc",
       },
     });

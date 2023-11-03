@@ -23,6 +23,7 @@ const FileInput = (props) => {
       <input
         className="w-full h-full opacity-0 cursor-pointer px-5 py-2"
         type="file"
+        accept=".doc, .pdf"
         name={props.name}
         value={props.value}
         onChange={props.onChange}
