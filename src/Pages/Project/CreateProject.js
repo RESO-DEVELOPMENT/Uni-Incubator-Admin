@@ -421,7 +421,6 @@ const CreateProject = () => {
               <FileInput
                 placeholder="Tài liệu của dự án (ưu tiên document)"
                 name="file"
-                accept={".doc" || ".docx"}
                 value={project.file}
                 onChange={getFile}
                 removeFile={removeFile}
